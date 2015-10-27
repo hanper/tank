@@ -32,17 +32,14 @@ blue = (20,20,200)
 light_blue = (0,0,255)
 white = (255,255,255)
 black = (0,0,0)
-<<<<<<< HEAD
 red = (200,20,20)
 light_red = (255,0,0)
 green = (20,200,20)
 light_green = (0,255,0)
 blue = (20,20,200)
 light_blue = (0,0,255)
-=======
 green = (20,200,20)
 light_green = (0,255,0)
->>>>>>> origin/master
 yellow = (200,200,20)
 light_yellow = (255,255,0)
 
@@ -159,17 +156,6 @@ def textToButton(msg, color, button_x, button_y, button_width, button_height, si
     text_rect.center = ((button_x + (button_width / 2)), (button_y + (button_height / 2)))
     game_display.blit(text_surf, text_rect)
 
-#Buttons
-def button(text, x, y, width, height, inactive_color, active_color):
-    cursor = pygame.mouse.get_pos()
-
-    if x + width > cursor[0] > x and y + height > cursor[1] > y:
-        pygame.draw.rect(game_display, active_color, (x, y, width, height))
-    else:
-        pygame.draw.rect(game_display, inactive_color, (x, y, width, height))
-
-    textToButton(text, black, x, y, width, height)
-
 #Text & Message manager
 def textObjects(text, color, size = "small"):
     if size == "small":
@@ -218,9 +204,9 @@ def pause():
 
 #Game menu
 def gameMenu():
-    button("Play", 150, 400, 100, 50, green, light_green, action = BUTTON_TYPE_PLAY)
-    button("Options", 350, 400, 100, 50, yellow, light_yellow, action = BUTTON_TYPE_OPTIONS)
-    button("Quit", 550, 400, 100, 50, red, light_red, action = BUTTON_TYPE_QUIT)
+    button("Play", 150, 500, 100, 50, green, light_green, action = BUTTON_TYPE_PLAY)
+    button("Options", 350, 500, 100, 50, yellow, light_yellow, action = BUTTON_TYPE_OPTIONS)
+    button("Quit", 550, 500, 100, 50, red, light_red, action = BUTTON_TYPE_QUIT)
 
 #Game options
 def gameOptions():
@@ -250,16 +236,7 @@ def gameIntro():
         messageToScreen(GAME_WELCOME, green, -150, "large")
         messageToScreen(GAME_OBJECTIVE, green, -50, "small")
         messageToScreen(GAME_RULE, green, 50, "small")
-<<<<<<< HEAD
-=======
         messageToScreen(GAME_MENU, green, 150, "medium")
-
-        button("play", 150,500,100,50, green, light_green)
-        button("controls", 350,500,100,50, yellow, light_yellow)
-        button("quit", 550,500,100,50, red, light_red)
-        
-        pygame.display.update()
->>>>>>> origin/master
 
         gameMenu()
         
