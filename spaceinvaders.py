@@ -21,6 +21,8 @@ class SpaceInvaders:
         self.playerY = 550
         self.bullet = None
         self.enemies = []
+        startX = 50
+        startY = 50
 
     def enemyUpdate(self):
         if not self.lastEnemyMove:
