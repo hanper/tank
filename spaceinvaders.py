@@ -75,6 +75,9 @@ class SpaceInvaders:
             for enemy in self.enemies:
                 for enemy in enemy:
                     enemy = enemy[1]
+                    if enemy.colliderect(pygame.Rect(self.playerX, self.playerY, self.player.get_width(), self.player.get_height())):
+                        self.lives -= 1
+                        self.resetPlayer()
                     enemy.x += self.enemySpeed * self.direction
                     self.lastEnemyMove = 10
                     if self.animationOn:
@@ -89,6 +92,7 @@ class SpaceInvaders:
                     chance = random.randint(0, 1000)
                     if chance > self.chance:
                         self.bullets.append(pygame.Rect(enemy.x, enemy.y, 5, 10))
+                        self.score += 5
         else:
             self.lastEnemyMove -= 1
 
@@ -115,24 +119,34 @@ class SpaceInvaders:
                     self.enemies[i].pop(j)
                     self.bullet = None
                     self.chance -= 1
+                    self.score += 100
         if self.bullet:
-            self.bullet.y -= 15
+            self.bullet.y -= 20
             if self.bullet.y < 0:
                 self.bullet = None
         for x in self.bullets:
-            x.y += 20
+            x.y += 5
             if x.y > 600:
                 self.bullets.remove(x)
+            if x.colliderect(pygame.Rect(self.playerX, self.playerY, self.player.get_width(), self.player.get_height())):
+                self.lives -= 1
+                self.bullets.remove(x)
+                self.resetPlayer()
 
         for b in self.barrierParticles:
             check = b.collidelist(self.bullets)
             if check != -1:
                 self.barrierParticles.remove(b)
                 self.bullets.pop(check)
+                self.score += 10
             elif self.bullet and b.colliderect(self.bullet):
                 self.barrierParticles.remove(b)
                 self.bullet = None
-        
+                self.score += 10
+
+    def resetPlayer(self):
+        self.playerX = 400
+    
     def run(self):
         clock = pygame.time.Clock()
         while True:
@@ -152,9 +166,16 @@ class SpaceInvaders:
                 pygame.draw.rect(self.screen, (255,255,255), bullet)
             for b in self.barrierParticles:
                 pygame.draw.rect(self.screen, (52,255,0), b)
-            self.bulletUpdate()
-            self.enemyUpdate()
-            self.playerUpdate()
+
+            if not self.enemies:
+                self.screen.blit(pygame.font.Font("assets/space_invaders.ttf", 50).render("You WIN!!!", -1, (52,255,0)), (400,10))
+                
+            if self.lives > 0:
+                self.bulletUpdate()
+                self.enemyUpdate()
+                self.playerUpdate()
+            elif self.lives == 0:
+                self.screen.blit(pygame.font.Font("assets/space_invaders.ttf", 50).render("You LOST!!!", -1, (52,255,0)), (400,10))
 
             self.screen.blit(self.font.render("Lives: {}".format(self.lives), -1, (255,255,255)), (20, 20))
             self.screen.blit(self.font.render("Score: {}".format(self.score), -1, (255,255,255)), (200, 20))
