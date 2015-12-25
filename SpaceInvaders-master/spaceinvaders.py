@@ -6,7 +6,7 @@ import random
 class SpaceInvaders:
     def __init__(self):
         self.score = 0
-        self.lives = 2
+        self.lives = 2000
         pygame.font.init()
         self.font = pygame.font.Font("assets/space_invaders.ttf", 15)
         barrierDesign = [[],[0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0],

@@ -9,13 +9,15 @@ class Conquest():
         self.background = []
         self.lvl = lvl
         self.speed = 20
+        self.gravity = 25
 
         self.coro = []
         self.coro_x = 20
         self.coro_x_change = 0
-        self.coro_y = 428
+        self.coro_default_y = 428
+        self.coro_y = self.coro_default_y
         self.coro_y_change = 0
-        self.coro_jump = 15
+        self.coro_jump = 50
         self.coro_direction = 'right'     #0-left, 1-right, 2-up
         self.coro_states = ['idle',
                             'run',
@@ -35,40 +37,39 @@ class Conquest():
                                          + "/frame-"
                                          + str(j)
                                          + ".png").convert_alpha()
-            #if self.coro_direction == 'left':
-                #directed_img = pygame.transform.rotate(temp_img, 180)
-            #else:
-                #directed_img = temp_img
             self.coro.append(pygame.transform.scale(temp_img, (48,48)))
 
-    def coro(self, coro_state):
-        range = 0   #number of frame in folder.
+    def coroUpdate(self, coro_state):
+        frame = 0   #number of frame in folder.
         if coro_state == 'idle':
-            range = 2
+            frame = 2
         elif coro_state == 'run':
-            range = 4
+            frame = 4
         elif coro_state == 'jump':
-            range = 1
+            frame = 1
         elif coro_state == 'fall':
-            range = 1
+            frame = 1
         elif coro_state == 'slide':
-            range = 1
+            frame = 1
         elif coro_state == 'faint':
-            range = 3
+            frame = 3
         elif coro_state == 'dizzy':
-            range = 2
+            frame = 2
 
-        for j in range(1,range + 1):
+        for j in range(1, frame + 1):
             temp_img = pygame.image.load("assets/coro/"
                                          + coro_state
                                          + "/frame-"
                                          + str(j)
                                          + ".png").convert_alpha()
             if self.coro_direction == 'left':
-                directed_img = pygame.transform.rotate(temp_img, 180)
+                directed_img = pygame.transform.flip(temp_img, 1, 0)
             else:
                 directed_img = temp_img
             self.coro.append(pygame.transform.scale(directed_img, (48,48)))
+
+        #for i in range(0, len(self.background)):
+        #    self.display.blit(self.coroUpdate[state] ,(self.coro_x,self.coro_y))
                     
     def main(self):
         clock = pygame.time.Clock()
@@ -94,6 +95,12 @@ class Conquest():
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     self.coro_x_change = 0
+                if event.key == pygame.K_UP:
+                    self.coro_y = self.coro_y + self.gravity
+                    if self.coro_y > self.coro_default_y:
+                        self.coro_y = self.coro_default_y
+                    else:
+                        self.coro_y = self.coro_y + self.gravity
                     
             self.coro_x += self.coro_x_change
             #self.coro_y += self.coro_y_change
@@ -109,8 +116,8 @@ class Conquest():
             if state > len(self.coro) - 1:
                 state = 0
             coro = self.coro[state]
-            coro_y = self.coro_y + self.coro_jump
 
+            self.coroUpdate('idle')
             pygame.display.update()
 
         
